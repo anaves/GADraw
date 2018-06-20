@@ -1,4 +1,4 @@
-package problem.Draw;
+package problem.Paint;
 
 import java.util.Random;
 
@@ -7,40 +7,36 @@ import org.opencv.core.Mat;
 import abstracts.Instance;
 import utils.PDI;
 
-public class DrawInstance extends Instance{
+public class PaintInstance extends Instance{
 	private static Mat image;
 	private static String filename;
 	private static String prefix;
 	private static String fileType;
+	private static int genesMax;
 	
-	public DrawInstance(double mutationRate, double crossoverRate){
+	public PaintInstance(double mutationRate, double crossoverRate){
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME );
 		setMutationRate(mutationRate);
 		setCrossoverRate(crossoverRate);
-		image = PDI.open(getFilename());
-		
-	//	image = PDI.convert2Gray(imageOri);
-		image = PDI.equalizeHistogram(image);
+		image = PDI.open(getFilename(),0);
 	}
 	
-	public DrawInstance(double mutationRate, double crossoverRate, String filename){
+	public PaintInstance(double mutationRate, double crossoverRate, int genesMax,String filename){
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME );
+		setGenesMax(genesMax);
 		setMutationRate(mutationRate);
 		setCrossoverRate(crossoverRate);
 		setFilename(filename);		
-		image = PDI.open(getFilename());
-		//image = PDI.convert2Gray(imageOri);
-		image = PDI.equalizeHistogram(image);
-		
+		image = PDI.open(getFilename(),0);		
 	}	
 	
 	public static String getFilename(){
-		return DrawInstance.filename;
+		return PaintInstance.filename;
 	}
 	
 	public static Mat getImage(){
 		if(image == null){
-			image = PDI.open(getFilename());
+			image = PDI.open(getFilename(),0);
 		}
 		return image;
 	}
@@ -49,22 +45,30 @@ public class DrawInstance extends Instance{
 		String str[] = filename.split("[.]");
 		setPrefix(str[0]);
 		setFileType(str[1]);
-		DrawInstance.filename = filename;
+		PaintInstance.filename = filename;
 	}
 	
 	private static void setPrefix(String prefix){
-		DrawInstance.prefix = prefix;
+		PaintInstance.prefix = prefix;
 	}
 	
 	public static String getPrefix(){
-		return DrawInstance.prefix;
+		return PaintInstance.prefix;
 	}
 	
 	private static void setFileType(String fileType){
-		DrawInstance.fileType = fileType;
+		PaintInstance.fileType = fileType;
 	}
 	
 	public static String getFileType(){
-		return DrawInstance.fileType;
+		return PaintInstance.fileType;
+	}
+
+	public static int getGenesMax() {
+		return genesMax;
+	}
+
+	public static void setGenesMax(int genesMax) {
+		PaintInstance.genesMax = genesMax;
 	}
 }
