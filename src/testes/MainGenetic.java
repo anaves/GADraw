@@ -5,7 +5,7 @@ import abstracts.Instance;
 import abstracts.Operators;
 import abstracts.Population;
 import genetics.MyGA;
-import problem.Draw.*;
+import problem.Paint.*;
 import utils.InOut;
 
 public class MainGenetic {
@@ -28,14 +28,14 @@ public class MainGenetic {
 	}
 	
 	private static void problems(){
-		System.out.println("1- Draw");
+		System.out.println("1-Paint");
 		int key = InOut.inValue("Sua opção");
 		
 		switch (key) {
 		case 1:
-			operator = new DrawOperator();
-			instance = new DrawInstance(0.05,0.5,"images/in/linha.png");
-			population = new DrawPopulation(100);
+			instance = new PaintInstance(0.05,1.0,4000,"images/in/draw/araraTeste.png");
+			population = new PaintPopulation(10);
+			operator = new PaintOperator();
 			break;
 		default:
 			System.out.println("opção inválida");

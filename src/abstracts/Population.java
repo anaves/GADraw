@@ -1,7 +1,7 @@
 package abstracts;
 
 public abstract class Population {
-	public abstract int getPopSize();
+	private int popSize;	
 	public abstract Problem get(int indice);
 	public abstract void set(int indice, Problem problem);
 	public abstract Problem bestSolution(Problem problem);
@@ -19,4 +19,11 @@ public abstract class Population {
 		return sum;
 	}
 	
+	public int getPopSize() {
+		return popSize;
+	}
+	
+	public void setPopSize(int popSize) {
+		this.popSize=popSize;
+	}
 }

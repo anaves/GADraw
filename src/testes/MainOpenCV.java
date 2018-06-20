@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.instrument.Instrumentation;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,20 +24,10 @@ public class MainOpenCV {
 
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME );
-		Mat img1 = open("images/in/linhaOut_101.png");
-		//Mat img2 = open2("images/in/logofecompt.png"); 
-		//Mat img3 = teste(img1,img2);
-		//save("images/in/saida.png",img3);
-//		Imgproc.equalizeHist(img3, img3);
-//		//Mat dst = teste(img3);
-//		Mat img4=denoisingTVL(img3);
-//		save("images/out/fibers001TVL.png",img4);
-//		Mat img5=denoising(img3);
-//		save("images/out/fibers001FNL.png",img5);
-		img1 = convert2Gray(img1);
-		Mat out = PDI.dilate(img1, 5);
-		save("images/out/Dilate.png",out);
-		//arrayToFile(histogram(img1),"histograma");
+		Mat img1 = open("images/in/draw/arara.png");
+		PDI.drawCircle(img1, img1.rows()/2, img1.cols()/2);
+		save("images/out/CIRCLE.png",img1);
+		
 		
 	}
 	

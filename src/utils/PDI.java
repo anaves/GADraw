@@ -73,18 +73,33 @@ public class PDI {
 		Imgcodecs.imwrite(filename, img);
 	}
 	
-	public static Mat open(String filename){
+	public static Mat open(String filename, int flag){
 		load();
 		Mat src = Imgcodecs.imread(filename);
-		src = convert2Gray(src);
-		Imgproc.equalizeHist(src, src);
+		if(flag==1) {
+			src = convert2Gray(src);
+			Imgproc.equalizeHist(src, src);
+		}
+		return src;
+	}
+	
+	public static Mat openRGB2RGBA(String filename){
+		load();
+		Mat src = Imgcodecs.imread(filename);
+		
+		System.out.println("original RGB " + src.channels());
+		Mat dst = new Mat();
+		Imgproc.cvtColor(src, dst, Imgproc.COLOR_RGB2RGBA);
+		System.out.println("saida RGBA " + dst.channels());
 		return src;
 	}
 	
 	public static Mat convert2Gray(Mat src){
 		load();
 		Mat dst = new Mat();
-		Imgproc.cvtColor(src, dst,Imgproc.COLOR_RGB2GRAY);
+		if(src.channels()==3) {
+			Imgproc.cvtColor(src, dst,Imgproc.COLOR_RGB2GRAY);
+		}
 		save("images/out/teste3.png",dst);
 		return dst;
 	}
@@ -110,9 +125,9 @@ public class PDI {
 				}
 			}			
 		}		
-		return dst;
-		
+		return dst;		
 	}
+	
 	
 	public static Mat umPontoColuna(Mat src1, Mat src2){
 		load();
@@ -134,8 +149,7 @@ public class PDI {
 		Mat dst = src1.clone();
 		for (int i = 0; i < dst.rows(); i++) {
 			for (int j = 0; j < dst.cols(); j++) {
-				if(Math.random() < 0.5){
-				
+				if(Math.random() < 0.5){				
 					dst.put(i,j,src2.get(i, j));
 				}
 				
@@ -174,17 +188,37 @@ public class PDI {
 		return dst;
 	}
 	
-	public static void drawCircle(Mat src, int x, int y) {
+	public static Mat drawCircle2(Mat src, Circle circle) {
+		Random rnd = new Random();			
+		Mat overlay = src.clone();
+		//System.out.println(circle.getXc()+" "+circle.getYc() + " r= " + circle.getRadius());
+		//System.out.println(circle.getR()+" "+circle.getG() + " " + circle.getB());
+		Imgproc.circle(overlay, 
+				new Point(circle.getYc(),circle.getXc()),
+				circle.getRadius(), 
+				new Scalar(circle.getR(), circle.getG(), circle.getB()),
+				-1, -1, 0);
+		Core.addWeighted(overlay, circle.getAlpha(), src, 1-circle.getAlpha(), 0.0, src);
+		
+		return src;
+	}
+	
+	public static Mat drawCircle(Mat src, int x, int y) {
 		Random rnd = new Random();
-		int c = rnd.nextInt(2);
-		int r=255-255*c, g=255-255*c, b=255-255*c;			
-		int radius = rnd.nextInt(100);
-		Imgproc.circle (
-		         src,                 //Matrix obj of the image
-		         new Point(x,y),    //Center of the circle
-		         radius,                    //Radius
-		         new Scalar(r, g, b)  //Scalar object for color
-		       );
+		System.out.println(src.rows() + " " + src.cols());
+		for (int i = 0; i <10 ; i++) {
+			int xc = rnd.nextInt(src.rows());
+			int yc = rnd.nextInt(src.cols());
+			int r=rnd.nextInt(256), g=rnd.nextInt(256), b=rnd.nextInt(256);	
+			System.out.println(r+" " + g+" "+ b);
+			int radius = rnd.nextInt(100);
+			Mat overlay = src.clone();
+			Imgproc.circle(overlay, new Point(xc,yc), radius,  new Scalar(r, g, b), -1, -1, 0);
+			Core.addWeighted(overlay, 0.5, src, 0.5, 0.0, src);
+		}
+	
+		
+		return src;
 	}
 	
 	/**

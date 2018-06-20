@@ -1,5 +1,8 @@
 package genetics;
 
+import java.time.Duration;
+import java.time.Instant;
+
 import abstracts.Genetic;
 import abstracts.Instance;
 import abstracts.Operators;
@@ -21,29 +24,43 @@ public class MyGA implements Genetic{
 
 	public void execute() {
 		int i = 0;
+		Instant init = Instant.now();
+		do{	
 		
-		do{			
-		
-			if(Math.random() < instance.getCrossoverRate()){
-				Problem p1 = operator.select(population);
-				Problem p2 = operator.select(population);
+			Problem p1 = operator.select(population);
+			Problem p2 = operator.select(population);
 			
-				Problem child = operator.crossover(p1,p2);
-			
+			Problem childs[] = operator.crossover(p1,p2);
+			Problem child1 = childs[0];
+			Problem child2 = childs[1];
 						
-				if(Math.random() < instance.getMutationRate()){
-					operator.mutation(child);
-				}
+			if(Math.random() < instance.getMutationRate()){
+				operator.mutation(child1);
+				operator.mutation(child2);
+			}
 				
-				operator.updatePopulation(population,child);
-			}
+			operator.updatePopulation(population,child1);
+			operator.updatePopulation(population,child2);
+	
 			melhor = population.bestSolution(melhor);
-			if(i%5000==0) {
+			if(i%10==0) {
+				Instant fim = Instant.now();
+				Duration duracao = Duration.between(init, fim);
+				System.out.println(duracao.toMinutes());
 				System.out.println(melhor);
+				init=Instant.now();
 			}
+		//	Instant fim = Instant.now();
+			//Duration duracao = Duration.between(init, fim);
+			//System.out.println(duracao.toMillis());
+		
+			System.gc();
+			
+			
 			i++;
 			
-		}while(i<500000);
+		}while(i<10000);
+		
 		System.out.println(melhor);
 	}
 

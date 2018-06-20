@@ -2,16 +2,12 @@ package abstracts;
 
 public abstract class Problem{
 	
-	private int popSize, indSize;	
+	private int indSize;	
 	private double fitness;
 	
-	public Problem(int popSize, int indSize){
-		setPopSize(popSize);
+	public Problem(int indSize){
+		//setPopSize(popSize);
 		setIndSize(indSize);
-	}
-	
-	public Problem(int popSize){
-		setPopSize(popSize);
 	}
 	
 	public abstract boolean stop();
@@ -20,14 +16,14 @@ public abstract class Problem{
 	
 	public abstract double evaluate();
 
-	public int getPopSize() {
+	/*public int getPopSize() {
 		return popSize;
 	}
 
 	public void setPopSize(int popSize) {
 		this.popSize = popSize;
 	}
-
+	 */
 	public int getIndSize() {
 		return indSize;
 	}
