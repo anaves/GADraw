@@ -1,10 +1,13 @@
-# GADraw
-Projeto Final da disciplina SCC5830 - Processamento de Imagens ministrada pelo Prof. Dr. Moacir A. Ponti
+# Projeto Final da disciplina SCC5830 - Processamento de Imagens
+Disciplina ministrada pelo Prof. Dr. Moacir A. Ponti no 1° semestre de 2018.
+
+Alysson A. Naves Silva - n.USP: 6109930
+
+# Descrição
+A proposta deste projeto, deve-se a busca do conhecimento das técnicas de processamento de imagens que serão combinadas com a utilização de algoritmos genéticos no doutorado do aluno. Com base nisto, foi desenvolvido um algoritmo genético para a "redesenhar" uma imagens dada. 
 
 # Objetivo
-Dada uma imagem de referência, o algoritmo genético irá reconstruir imagens, que serão avaliadas, comparando
-as imagens geradas com a referência. O objetivo deste projeto é aplicar técnicas de processamento das imagens
-para aproximar o resultado obtido com a imagem de referência através de um processo evolutivo. 
+Dada uma imagem de referência, o algoritmo genético irá redesenhar a imagem a partir da evolução da imagem inicial que é gerada aleatoriamente.  
 
 # Entrada
 Uma imagem RGB de 24 bits.
@@ -12,6 +15,4 @@ Uma imagem RGB de 24 bits.
 # Saída
 Uma imagem RGB de 24 bits que mais se aproxima da imagem de entrada.
 
-# A estratégia
-São gerados n círculos, com raio, posição e cores arbitrárias.
-
+Os detalhes para a execução deste código pode ser consultado no relatório final.
