@@ -15,4 +15,5 @@ Uma imagem RGB de 24 bits.
 # Saída
 Uma imagem RGB de 24 bits que mais se aproxima da imagem de entrada.
 
+# Execução 
 Os detalhes para a execução deste código pode ser consultado no relatório final.
