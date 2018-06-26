@@ -1,9 +1,11 @@
 package problem.Paint;
 
-import java.util.Random;
+import java.io.BufferedReader;
+import java.io.FileReader;
 
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+
 import abstracts.Instance;
 import utils.PDI;
 
@@ -13,6 +15,30 @@ public class PaintInstance extends Instance{
 	private static String prefix;
 	private static String fileType;
 	private static int genesMax;
+	private static int radiusMax;
+	private static int popSize;
+	private int iteracoes;
+	
+	public PaintInstance(String input) {
+		try {
+			FileReader arq = new FileReader(input);
+			BufferedReader in = new BufferedReader(arq);
+			String linha;
+			do{
+				linha=in.readLine();
+			}while(!linha.equals("parametros"));
+			
+			setFilename(in.readLine());
+			setGenesMax(Integer.parseInt(in.readLine()));
+			PaintInstance.radiusMax = Integer.parseInt(in.readLine());
+			setMutationRate(Double.parseDouble(in.readLine()));
+			PaintInstance.popSize = Integer.parseInt(in.readLine());
+			this.iteracoes=Integer.parseInt(in.readLine());
+			image = PDI.open(getFilename(),0);	
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public PaintInstance(double mutationRate, double crossoverRate){
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME );
@@ -28,8 +54,22 @@ public class PaintInstance extends Instance{
 		setCrossoverRate(crossoverRate);
 		setFilename(filename);		
 		image = PDI.open(getFilename(),0);		
+		
 	}	
 	
+	
+	public static int getRadiusMax() {
+		return radiusMax;
+	}
+
+	public static int getPopSize() {
+		return popSize;
+	}
+
+	public int getIteracoes() {
+		return iteracoes;
+	}
+
 	public static String getFilename(){
 		return PaintInstance.filename;
 	}

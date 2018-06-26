@@ -1,5 +1,10 @@
 package abstracts;
 
+/**
+ * This class is the abstraction for capturing the information of the problem to be solved
+ * @author Alysson A. Naves Silva
+ *
+ */
 public abstract class Instance {
 	private double mutationRate = 0.0; // default: no mutation
 	private double crossoverRate = 1.0; // default: crossover
@@ -20,6 +25,6 @@ public abstract class Instance {
 		this.crossoverRate = crossoverRate;
 	}
 	
-	
+	public abstract int getIteracoes();
 	
 }

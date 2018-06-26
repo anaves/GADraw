@@ -17,7 +17,9 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.photo.Photo;
 
 public class PDI {
-	
+	public static void main(String[] args) {
+		
+	}
 	private static void load(){
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME );
 	}
@@ -68,8 +70,15 @@ public class PDI {
 		Photo.denoise_TVL1(observations, dst);
 		return dst;
 	}
-	public static void save(String filename, Mat img){
-		load();
+	public static void save(String filename, int geracao,Mat img){
+		load();	
+		int font = Core.FONT_HERSHEY_PLAIN;
+		Imgproc.putText(img, "ger: " + geracao,new Point(0,img.rows()-5), font, 0.8, new Scalar(255,255,255));
+		Imgcodecs.imwrite(filename, img);
+	}
+	
+	public static void save(String filename,Mat img){
+		load();	
 		Imgcodecs.imwrite(filename, img);
 	}
 	
@@ -190,11 +199,14 @@ public class PDI {
 	
 	public static Mat drawCircle2(Mat src, Circle circle) {
 		Random rnd = new Random();			
-		Mat overlay = src.clone();
+		Mat overlay = new Mat(src.size(),src.type());
 		//System.out.println(circle.getXc()+" "+circle.getYc() + " r= " + circle.getRadius());
 		//System.out.println(circle.getR()+" "+circle.getG() + " " + circle.getB());
+		circle.setR();
+		circle.setG();
+		circle.setB();
 		Imgproc.circle(overlay, 
-				new Point(circle.getYc(),circle.getXc()),
+				new Point(circle.getXc(),circle.getYc()),
 				circle.getRadius(), 
 				new Scalar(circle.getR(), circle.getG(), circle.getB()),
 				-1, -1, 0);
@@ -203,15 +215,36 @@ public class PDI {
 		return src;
 	}
 	
+	public static Mat drawCircles(Mat src, Circle [] circles) {
+		Random rnd = new Random();			
+		
+		for (int i = 0; i < circles.length; i++) {
+			Mat overlay = src.clone();
+			Circle circle = circles[i];
+			circle.setR();
+			circle.setG();
+			circle.setB();
+			Imgproc.circle(overlay, 
+					new Point(circle.getYc(),circle.getXc()),
+					circle.getRadius(), 
+					new Scalar(circle.getR(), circle.getG(), circle.getB()),
+					-1, -1, 0);
+			Core.addWeighted(overlay, circle.getAlpha(), src, 1-circle.getAlpha(), 0.0, src);
+		}
+		
+		
+		return src;
+	}
+	
 	public static Mat drawCircle(Mat src, int x, int y) {
 		Random rnd = new Random();
 		System.out.println(src.rows() + " " + src.cols());
-		for (int i = 0; i <10 ; i++) {
+		for (int i = 0; i <30 ; i++) {
 			int xc = rnd.nextInt(src.rows());
 			int yc = rnd.nextInt(src.cols());
 			int r=rnd.nextInt(256), g=rnd.nextInt(256), b=rnd.nextInt(256);	
 			System.out.println(r+" " + g+" "+ b);
-			int radius = rnd.nextInt(100);
+			int radius = rnd.nextInt(30);
 			Mat overlay = src.clone();
 			Imgproc.circle(overlay, new Point(xc,yc), radius,  new Scalar(r, g, b), -1, -1, 0);
 			Core.addWeighted(overlay, 0.5, src, 0.5, 0.0, src);

@@ -1,0 +1,15 @@
+# Parâmetros:
+# caminho do arquivo no diretório images
+# número de círculos
+# raio máximo dos círculos
+# taxa de mutacao
+# tamanho da populacao
+# número de iterações
+# iniciar este arquivo com a palavra parametros
+parametros
+images/gioconda/gioconda.png
+4000
+10
+0.05
+20
+2000

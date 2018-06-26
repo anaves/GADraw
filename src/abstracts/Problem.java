@@ -1,12 +1,15 @@
 package abstracts;
-
+/**
+ * 
+ * @author Alysson A. Naves Silva
+ *
+ */
 public abstract class Problem{
 	
 	private int indSize;	
 	private double fitness;
 	
 	public Problem(int indSize){
-		//setPopSize(popSize);
 		setIndSize(indSize);
 	}
 	
@@ -16,14 +19,6 @@ public abstract class Problem{
 	
 	public abstract double evaluate();
 
-	/*public int getPopSize() {
-		return popSize;
-	}
-
-	public void setPopSize(int popSize) {
-		this.popSize = popSize;
-	}
-	 */
 	public int getIndSize() {
 		return indSize;
 	}

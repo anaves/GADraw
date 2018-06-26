@@ -1,14 +1,9 @@
 package problem.Paint;
 
 
-import java.time.Duration;
-import java.time.Instant;
-import java.util.LinkedList;
 import java.util.Random;
 
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-
 import abstracts.Problem;
 import utils.Circle;
 import utils.PDI;
@@ -19,18 +14,19 @@ public class PaintCod extends Problem{
 	private Mat image;
 	private static int cont=0;
 	
-	public PaintCod(int indSize) {
-		super(indSize);			
+	public PaintCod(int indSize) {		
+		super(indSize);	
 		if(original==null) {
 			original = PaintInstance.getImage();
 			System.out.println("ORIGINAL INSTANCIADO!");
 		}
-		image = new Mat(original.size(), original.type());
-		initBackground();
+		//image = new Mat(original.size(), original.type());
+		
 		listCircle = new Circle[indSize];
 		initImage();		
 	}
 
+	
 	public static Mat getOriginal() {
 		if(original==null) {
 			original = PaintInstance.getImage();
@@ -38,19 +34,13 @@ public class PaintCod extends Problem{
 		return original;
 	}
 	public void initBackground() {
-		Random rnd = new Random();
-		//short c=(short)(255-rnd.nextInt(2)*255);
-		//byte r=(byte)rnd.nextInt(c),g=(byte)rnd.nextInt(c),b=(byte)rnd.nextInt(c);
 		byte [] cor= {0,0,0};
-		//System.out.println(cor[0]+" "+cor[1]+ " "+ cor[2]);
-		// Cor do fundo
+		// cor do fundo
 		for (int i = 0; i < image.rows(); i++) {
 			for (int j = 0; j < image.cols(); j++) {
 				image.put(i, j, cor);
 			}
 		}	
-	//	System.out.println(this);
-		//System.exit(0);
 	}
 	
 	public void setListCircle(Circle[] listCircle) {
@@ -62,29 +52,23 @@ public class PaintCod extends Problem{
 	
 	public void initImage() {	
 		Circle circle;
+		
 		for (int i = 0; i < listCircle.length; i++) {
 			circle = new Circle(original.rows(),original.cols()); 
-			listCircle[i]=circle;
-		
-			image=PDI.drawCircle2(image,circle);
-			System.gc();
+			listCircle[i]=circle;		
 		}
 		
-		evaluate();
-	}
-	
-	public void createImage() {
-		setImage();
-		for (int i = 0; i < listCircle.length; i++) {
-			image=PDI.drawCircle2(image,listCircle[i]);
-		}
-		evaluate();
+		createImage();
 		System.gc();
 	}
 	
-	public void setImage() {
+	public void createImage() {
 		this.image = new Mat(original.size(), original.type());
 		initBackground();
+		image=PDI.drawCircles(image,listCircle);
+		
+		evaluate();
+		System.gc();
 	}
 	
 	public Mat getImage() {
@@ -126,16 +110,52 @@ public class PaintCod extends Problem{
 			}
 		}
 	
-		return (1.0+Math.sqrt(r+g+b));
+		return (1.0+Math.sqrt(r)+Math.sqrt(g)+Math.sqrt(b));
+	}
+	
+	public void posProcessing() {
+		Mat m1 = PDI.denoisingFNL(this.image);
+		double rmseM1=rmseVet(m1);
+		Mat m2 = PDI.gaussianBlur(this.image);
+		double rmseM2=rmseVet(m2);
+		Mat m3 = PDI.medianBlur(this.image);
+		double rmseM3 = rmseVet(m3);
+		Mat m4 = this.image;
+		double rmseM4 = rmseVet(m4);
+		Mat melhor;
+		if(rmseM1<rmseM2 && rmseM1 <rmseM3 && rmseM1 < rmseM4) {
+			melhor = m1;
+		}else if(rmseM2<rmseM1 && rmseM2 <rmseM3 && rmseM2 < rmseM4) {
+			melhor = m2;
+		}else if(rmseM3<rmseM1 && rmseM3 <rmseM2 && rmseM3 < rmseM4) {
+			melhor = m3;
+		}else {
+			melhor = m4;
+		}
+		String local = PaintInstance.getPrefix();
+		PDI.save(local+"Circ"+listCircle.length+"_Radiusmax_"+PaintInstance.getRadiusMax()+"_"+cont+"."+PaintInstance.getFileType(), melhor);
+	}
+	
+	public double rmseVet(Mat m) {
+		double r=0,g=0,b=0;	
+		
+		for (int i = 0; i < m.rows(); i++) {
+			for (int j = 0; j < m.cols(); j++) {				
+				r = r + Math.pow(m.get(i, j)[0]-original.get(i,j)[0],2.0);
+				g = g + Math.pow(m.get(i, j)[0]-original.get(i,j)[0],2.0);
+				b = b + Math.pow(m.get(i, j)[0]-original.get(i,j)[0],2.0);
+			}
+		}
+	
+		return (1.0+Math.sqrt(r)+Math.sqrt(g)+Math.sqrt(b));
 	}
 	
 	public String toString(){
-		String local = PaintInstance.getPrefix();//.replace("/in/", "/out/");
+		String local = PaintInstance.getPrefix();//.replace("/in/", "/out/");		
+		PDI.save(local+"Circ"+listCircle.length+"_Radiusmax_"+PaintInstance.getRadiusMax()+"_"+cont+"."+PaintInstance.getFileType(), image);
 		cont++;
-		
-		PDI.save(local+"Out_"+cont+"."+PaintInstance.getFileType(), image);
 	
-		return "Verifique: " + local +"NOut_"+cont+"."+PaintInstance.getFileType() + " fitness " + getFitness() + " " + super.toString();
+		return "Verifique: " + local +"Out_"+cont+"."+PaintInstance.getFileType() + " fitness " + getFitness() + " " + super.toString();
 	}
 
 	

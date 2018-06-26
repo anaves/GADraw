@@ -24,42 +24,32 @@ public class MyGA implements Genetic{
 
 	public void execute() {
 		int i = 0;
-		Instant init = Instant.now();
-		do{	
-		
+		int n = instance.getIteracoes();
+		int div = n/200;
+		System.out.println("n = " + n + " div = " + div);
+		do{			
 			Problem p1 = operator.select(population);
 			Problem p2 = operator.select(population);
 			
 			Problem childs[] = operator.crossover(p1,p2);
-			Problem child1 = childs[0];
-			Problem child2 = childs[1];
-						
+									
 			if(Math.random() < instance.getMutationRate()){
-				operator.mutation(child1);
-				operator.mutation(child2);
+				operator.mutation(childs[0]);
+				operator.mutation(childs[1]);
 			}
 				
-			operator.updatePopulation(population,child1);
-			operator.updatePopulation(population,child2);
+			population.updatePopulation(childs[0]);
+			population.updatePopulation(childs[1]);
 	
-			melhor = population.bestSolution(melhor);
-			if(i%10==0) {
-				Instant fim = Instant.now();
-				Duration duracao = Duration.between(init, fim);
-				System.out.println(duracao.toMinutes());
+			melhor = population.bestSolution();
+			
+			if(i%div==0) {
 				System.out.println(melhor);
-				init=Instant.now();
 			}
-		//	Instant fim = Instant.now();
-			//Duration duracao = Duration.between(init, fim);
-			//System.out.println(duracao.toMillis());
 		
-			System.gc();
-			
-			
-			i++;
-			
-		}while(i<10000);
+			System.gc();			
+			i++;			
+		}while(i<n);
 		
 		System.out.println(melhor);
 	}

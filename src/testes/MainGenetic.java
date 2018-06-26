@@ -7,6 +7,7 @@ import abstracts.Population;
 import genetics.MyGA;
 import problem.Paint.*;
 import utils.InOut;
+import utils.PDI;
 
 public class MainGenetic {
 	//private static Problem problem;
@@ -18,24 +19,26 @@ public class MainGenetic {
 	public static void main(String[] args) {
 		menu();
 		run();
+		pos();
+		System.out.println("terminou a evolução!");
 	}
 	
 	private static void menu(){
-		System.out.println("***Problemas***");
 		problems();
 		System.out.println("***Implementação do AG***");
 		geneticos();
 	}
 	
 	private static void problems(){
-		System.out.println("1-Paint");
-		int key = InOut.inValue("Sua opção");
+		int key = 1;
 		
 		switch (key) {
 		case 1:
-			instance = new PaintInstance(0.05,1.0,4000,"images/in/draw/araraTeste.png");
-			population = new PaintPopulation(10);
+			instance= new PaintInstance("input/input.txt");
+			//instance = new PaintInstance(0.05,1.0,4000,"images/arara/arara.png");
+			population = new PaintPopulation(6);
 			operator = new PaintOperator();
+			
 			break;
 		default:
 			System.out.println("opção inválida");
@@ -45,12 +48,14 @@ public class MainGenetic {
 	}
 	
 	private static void geneticos(){
-		System.out.println("1- MyGA (escolher esta opção)");
-		int key = InOut.inValue("Sua opção");
+		//System.out.println("1- MyGA (escolher esta opção)");
+		int key = 1;//InOut.inValue("Sua opção");
 		
 		switch (key) {
 		case 1:
+			System.out.println("inicia evolução");
 			genetic = new MyGA(operator,instance, population);
+			
 			break;
 
 		default:
@@ -62,6 +67,11 @@ public class MainGenetic {
 	
 	private static void run(){
 		genetic.execute();
+		
 	}
 
+	private static void pos() {
+		PaintCod melhor = (PaintCod)population.bestSolution();
+		melhor.posProcessing();
+	}
 }

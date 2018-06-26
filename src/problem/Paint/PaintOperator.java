@@ -1,63 +1,46 @@
 package problem.Paint;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Random;
 
 import abstracts.Operators;
 import abstracts.Population;
 import abstracts.Problem;
 import utils.Circle;
-import utils.PDI;
 
 public class PaintOperator implements Operators {
 	
 	@Override
 	public Problem [] crossover(Problem p1, Problem p2) {
-		Random rnd = new Random();
+		
 		PaintCod pai1 = (PaintCod)p1;
 		PaintCod pai2 = (PaintCod)p2; 
-		PaintCod child1 = new PaintCod(p1.getIndSize());
-		PaintCod child2 = new PaintCod(p1.getIndSize());
+		PaintCod child1 = new PaintCod(pai1.getIndSize());
+		
+		PaintCod child2 = new PaintCod(pai1.getIndSize());
 		Circle[] listChild1 = child1.getListCircle();
 		Circle[] listChild2 = child2.getListCircle();
 		Circle[] listPai1 = pai1.getListCircle();
 		Circle[] listPai2 = pai2.getListCircle();
 			
-		int ptCut1 = rnd.nextInt(p1.getIndSize());
-		int ptCut2 = rnd.nextInt(p1.getIndSize());
-		int max = Math.max(ptCut1, ptCut2);
-		int min = Math.min(ptCut1, ptCut2);
-		for (int i = 0; i < listChild1.length && (i <= min || i >= max); i++) {
-			listChild1[i] = listPai1[i];
-			listChild2[i] = listPai2[i];
+		int ptCut = p1.getIndSize()/2;
+		
+		for (int i = 0; i < ptCut; i++) {
+			listChild1[i] = listPai1[i].getClone();
+			listChild2[i] = listPai2[i].getClone();
         }
         
-        for (int i = min+1; i <= max; i++) {
-        	listChild1[i] = listPai2[i];
-			listChild2[i] = listPai1[i];
-        }
-        
-        
-        
-	//	child.setListCircle(listCircleChild);
+        for (int i = ptCut; i < p1.getIndSize(); i++) {
+        	listChild1[i] = listPai2[i].getClone();
+			listChild2[i] = listPai1[i].getClone();
+        }       
+      
 		child1.createImage();
 		child2.createImage();
-	//	Instant fim = Instant.now();
-	//	Duration duracao1 = Duration.between(inicio, fim);
-	//	System.out.println(duracao1.toMillis()+" ms");
-	/*	System.out.println(pai1);
-		System.out.println(pai2);
-		System.out.println(child);
-		System.exit(0);*/
+	
 		PaintCod [] childs = new PaintCod[2];
 		childs[0]=child1;
 		childs[1]=child2;
-		if(Circle.factor<1.0) {
-			Circle.factor=Circle.factor+0.1;
-		}
+		
 		return childs;
 	}
 
@@ -65,27 +48,41 @@ public class PaintOperator implements Operators {
 	public void mutation(Problem ind) {
 		PaintCod mutant = (PaintCod)ind;
 		Random rnd = new Random();
-		//System.out.println("MUTAÇÃO");
 		Circle []listCircle = mutant.getListCircle();
-	
-	//	System.out.println(mutant);
-		// 20% dos genes sofrem mutação
-		int countGene = rnd.nextInt(1+(int)0.2*listCircle.length);
-		for (int i = 0; i<countGene;i++) {			
-			if(rnd.nextDouble()<0.05) {
+
+		for (int i = 0; i<listCircle.length;i++) {
+			if(rnd.nextDouble()<0.5) {
 				double randomFactor = rnd.nextDouble();
-				Circle circle = listCircle[rnd.nextInt(listCircle.length)];
+				Circle circle = listCircle[i];
 				if(randomFactor < 0.4) {
 					// muda cor (40%)
 					//System.out.println("muda cor");
-					circle.setR((short)rnd.nextInt(256));
-					circle.setG((short)rnd.nextInt(256));
-					circle.setB((short)rnd.nextInt(256));				
+					circle.setR();
+					circle.setG();
+					circle.setB();				
 				}else if(randomFactor < 0.7) {
 					// muda centro (30%)
 				//	System.out.println("muda centro");
-					circle.setXc((short)rnd.nextInt(mutant.getImage().cols()));
-					circle.setYc((short)rnd.nextInt(mutant.getImage().rows()));					
+					short xc = circle.getXc();
+					short yc = circle.getYc();
+					short hx = (short)rnd.nextInt(3);
+					short hy = (short)rnd.nextInt(3);
+					if(Math.random()<0.5) {
+						xc = (short) (xc + hx);
+					}else {
+						xc = (short) (xc - hx);
+					}
+					if(Math.random()<0.5) {
+						yc = (short) (yc + hy);
+					}else {
+						yc = (short) (yc - hy);
+					}
+					if(xc>0 && xc < mutant.getImage().rows()) {
+						circle.setXc(xc);
+					}
+					if(yc>0 && yc < mutant.getImage().cols()) {
+						circle.setYc(yc);
+					}
 				}else if(randomFactor < 0.85) {
 					// muda raio (15%)
 				//	System.out.println("muda raio");
@@ -114,6 +111,7 @@ public class PaintOperator implements Operators {
 	private Problem roleta(Population pop){
 		//Roleta
 		double total = pop.getPopulationFitness();
+		
 		double value = Math.random()*total;
 		double sum = 0.0;
 		for(int i = 0; i < pop.getPopSize(); i++){
@@ -126,22 +124,6 @@ public class PaintOperator implements Operators {
 		return null;	
 	}
 
-	@Override
-	public void updatePopulation(Population pop, Problem child) {
-		int indexPoor = new Random().nextInt(pop.getPopSize());
-		Problem pior = pop.get(0);
-		for (int i = 1; i < pop.getPopSize(); i++) {
-			if(pior.getFitness() > pop.get(i).getFitness()){ // max <, min >
-				pior = pop.get(i);
-				indexPoor = i;
-			}
-		}
-		if(child.getFitness()>pior.getFitness()) {
-			pop.set(indexPoor, child);
-		}
-		
-		
-	}
 
 	
 
