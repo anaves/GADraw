@@ -90,38 +90,36 @@ public class PaintCod extends Problem{
 		return null;
 	}
 
-
-
 	@Override
 	public double evaluate() {	
-		setFitness(1+(10000000.0/rmseVet()));
+		setFitness(1+(100000000.0/dist1()));
 		return getFitness();
 	}
 	
 	
-	public double rmseVet() {
+	public double dist1() {
 		double r=0,g=0,b=0;	
 		
 		for (int i = 0; i < image.rows(); i++) {
 			for (int j = 0; j < image.cols(); j++) {				
-				r = r + Math.pow(image.get(i, j)[0]-original.get(i,j)[0],2.0);
-				g = g + Math.pow(image.get(i, j)[0]-original.get(i,j)[0],2.0);
-				b = b + Math.pow(image.get(i, j)[0]-original.get(i,j)[0],2.0);
+				r = r + Math.abs(image.get(i, j)[0]-original.get(i,j)[0]);
+				g = g + Math.abs(image.get(i, j)[1]-original.get(i,j)[1]);
+				b = b + Math.abs(image.get(i, j)[2]-original.get(i,j)[2]);
 			}
 		}
 	
-		return (1.0+Math.sqrt(r)+Math.sqrt(g)+Math.sqrt(b));
+		return (1.0+r+g+b);
 	}
 	
 	public void posProcessing() {
 		Mat m1 = PDI.denoisingFNL(this.image);
-		double rmseM1=rmseVet(m1);
+		double rmseM1=dist(m1);
 		Mat m2 = PDI.gaussianBlur(this.image);
-		double rmseM2=rmseVet(m2);
+		double rmseM2=dist(m2);
 		Mat m3 = PDI.medianBlur(this.image);
-		double rmseM3 = rmseVet(m3);
+		double rmseM3 = dist(m3);
 		Mat m4 = this.image;
-		double rmseM4 = rmseVet(m4);
+		double rmseM4 = dist(m4);
 		Mat melhor;
 		if(rmseM1<rmseM2 && rmseM1 <rmseM3 && rmseM1 < rmseM4) {
 			melhor = m1;
@@ -136,25 +134,24 @@ public class PaintCod extends Problem{
 		PDI.save(local+"Circ"+listCircle.length+"_Radiusmax_"+PaintInstance.getRadiusMax()+"_"+cont+"."+PaintInstance.getFileType(), melhor);
 	}
 	
-	public double rmseVet(Mat m) {
+	public double dist(Mat m) {
 		double r=0,g=0,b=0;	
 		
 		for (int i = 0; i < m.rows(); i++) {
 			for (int j = 0; j < m.cols(); j++) {				
-				r = r + Math.pow(m.get(i, j)[0]-original.get(i,j)[0],2.0);
-				g = g + Math.pow(m.get(i, j)[0]-original.get(i,j)[0],2.0);
-				b = b + Math.pow(m.get(i, j)[0]-original.get(i,j)[0],2.0);
+				r = r + Math.abs(m.get(i, j)[0]-original.get(i,j)[0]);
+				g = g + Math.abs(m.get(i, j)[1]-original.get(i,j)[1]);
+				b = b + Math.abs(m.get(i, j)[2]-original.get(i,j)[2]);
 			}
 		}
 	
-		return (1.0+Math.sqrt(r)+Math.sqrt(g)+Math.sqrt(b));
+		return (1.0+r+g+b);
 	}
 	
 	public String toString(){
-		String local = PaintInstance.getPrefix();//.replace("/in/", "/out/");		
+		String local = PaintInstance.getPrefix();		
 		PDI.save(local+"Circ"+listCircle.length+"_Radiusmax_"+PaintInstance.getRadiusMax()+"_"+cont+"."+PaintInstance.getFileType(), image);
-		cont++;
-	
+		cont++;	
 		return "Verifique: " + local +"Out_"+cont+"."+PaintInstance.getFileType() + " fitness " + getFitness() + " " + super.toString();
 	}
 

@@ -44,6 +44,10 @@ public class PaintOperator implements Operators {
 		return childs;
 	}
 
+	/* Estratégia de mutação de:
+	 * https://github.com/LuisAraujo/
+	 * @see abstracts.Operators#mutation(abstracts.Problem)
+	 */
 	@Override
 	public void mutation(Problem ind) {
 		PaintCod mutant = (PaintCod)ind;
@@ -53,53 +57,43 @@ public class PaintOperator implements Operators {
 		for (int i = 0; i<listCircle.length;i++) {
 			if(rnd.nextDouble()<0.5) {
 				double randomFactor = rnd.nextDouble();
+				//System.out.println("RANDOM " + randomFactor);
 				Circle circle = listCircle[i];
-				if(randomFactor < 0.4) {
-					// muda cor (40%)
-					//System.out.println("muda cor");
-					circle.setR();
-					circle.setG();
-					circle.setB();				
-				}else if(randomFactor < 0.7) {
-					// muda centro (30%)
-				//	System.out.println("muda centro");
-					short xc = circle.getXc();
-					short yc = circle.getYc();
-					short hx = (short)rnd.nextInt(3);
-					short hy = (short)rnd.nextInt(3);
-					if(Math.random()<0.5) {
-						xc = (short) (xc + hx);
-					}else {
-						xc = (short) (xc - hx);
-					}
-					if(Math.random()<0.5) {
-						yc = (short) (yc + hy);
-					}else {
-						yc = (short) (yc - hy);
-					}
-					if(xc>0 && xc < mutant.getImage().rows()) {
-						circle.setXc(xc);
-					}
-					if(yc>0 && yc < mutant.getImage().cols()) {
-						circle.setYc(yc);
-					}
-				}else if(randomFactor < 0.85) {
-					// muda raio (15%)
-				//	System.out.println("muda raio");
-					circle.setRadius();
+				if(randomFactor < 0.6) {
+					// altera cor
+					if(randomFactor < 0.15) // 10%
+						circle.setR();
+					else if(randomFactor < 0.3) // 10%
+						circle.setG(); 
+					else if (randomFactor < 0.45) // 10%
+						circle.setB();
+					else //10%
+						circle.setAlpha(new Random().nextDouble());
+				}else if(randomFactor < 0.9) {
+					//5% muda x e y
+					if(randomFactor < 0.7) {
+						circle.setXc((short)new Random().nextInt(mutant.getImage().rows()));
+						circle.setYc((short)new Random().nextInt(mutant.getImage().cols()));
+					}else if (randomFactor < 0.8) {
+							circle.setXc((short)new Random().nextInt(mutant.getImage().rows()));
+					}else if (randomFactor < 0.9) {
+							circle.setYc((short)new Random().nextInt(mutant.getImage().cols()));
+					}		
+				
 				}else {
-					// remove (15%)
-			//		System.out.println("remove");
-					circle.setRadius((short)0);
+					if (randomFactor < 0.95) {
+						//10% muda raio
+						circle.setRadius();
+					}else {		
+						// 	remove (15%)
+						circle.setRadius((short)0);
+					}
 				}
 			}
 			
 		}
-	//	mutant.setListCircle(listCircle);
+	
 		mutant.createImage();
-	//	System.out.println(mutant);
-		//System.exit(0);
-		
 		
 	}
 

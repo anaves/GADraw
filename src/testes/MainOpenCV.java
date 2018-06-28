@@ -1,11 +1,8 @@
 package testes;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.lang.instrument.Instrumentation;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
@@ -17,16 +14,17 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.photo.Photo;
 
-
 import utils.PDI;
 
 public class MainOpenCV {
 
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME );
-		Mat img1 = open("images/in/draw/arara.png");
-		PDI.drawCircle(img1, img1.rows()/2, img1.cols()/2);
-		save("images/out/CIRCLE.png",img1);
+		String filename = "images/arara/araraC5k_R4Out_364";
+		String filename1 = filename+".png";
+		Mat img = open(filename1);
+		Mat dst = denoising(img);
+		save(filename+"_gaussian.png",dst);
 		
 		
 	}

@@ -61,25 +61,35 @@ public class Circle implements Cloneable{
 		return r;
 	}
 	public void setR() {
-		//if(Math.random() < 0.9) {
-			this.r = (short)(PaintCod.getOriginal().get(getXc(),getYc())[0]*getFactor());
-		//}
+		Random rnd = new Random();
+	//	if(rnd.nextDouble() < 0.5) {
+	//		this.r = (short)rnd.nextInt(256);
+	//	}else {
+			this.r = (short)(PaintCod.getOriginal().get(getXc(),getYc())[0]*Math.random());
+	//	}
+		
 	}
 	public int getG() {
 		return g;
 	}
-	public void setG() {	
-		///if(Math.random() < 0.9) {
-			this.g = (short)(PaintCod.getOriginal().get(getXc(),getYc())[1]*getFactor());
-		//}
+	public void setG() {		
+		Random rnd = new Random();
+	//	if(rnd.nextDouble() < 0.5) {
+	//		this.g = (short)rnd.nextInt(256);
+	//	}else {
+			this.g = (short)(PaintCod.getOriginal().get(getXc(),getYc())[1]*Math.random());
+	//	}
 	}
 	public short getB() {
 		return b;
 	}
 	public void setB() {	
-	//	if(Math.random() < 0.9) {
-			this.b = (short)(PaintCod.getOriginal().get(getXc(),getYc())[2]*getFactor());
-		//}
+		Random rnd = new Random();
+//		if(rnd.nextDouble() < 0.5) {
+//			this.b = (short)rnd.nextInt(256);
+//		}else {
+			this.b = (short)(PaintCod.getOriginal().get(getXc(),getYc())[2]*Math.random());
+//		}
 	}
 	public double getAlpha() {
 		return alpha;
@@ -89,20 +99,12 @@ public class Circle implements Cloneable{
 	}
 	
 	public static void setFactor() {
-	//	if(new Random().nextDouble()<0.5) {
-			if(factor < 1.0){
-				factor = factor + 0.01;
-			}
-		//}else {
-			//if(factor < 1.0 && factor > 0.0){
-				//factor = factor - 0.005;
-			//}
-		//}
-	
+		if(factor < 1.0){
+			factor = factor + 0.001;
+		}	
 	}
 	
-	private double getFactor() {
-		
+	private double getFactor() {		
 		return factor;
 	}
 
