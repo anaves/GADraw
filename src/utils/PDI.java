@@ -17,9 +17,6 @@ import org.opencv.imgproc.Imgproc;
 import org.opencv.photo.Photo;
 
 public class PDI {
-	public static void main(String[] args) {
-		
-	}
 	private static void load(){
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME );
 	}
@@ -86,7 +83,7 @@ public class PDI {
 		load();
 		Mat src = Imgcodecs.imread(filename);
 		if(flag==1) {
-			src = convert2Gray(src);
+			src = rgb2Gray(src);
 			Imgproc.equalizeHist(src, src);
 		}
 		return src;
@@ -103,7 +100,7 @@ public class PDI {
 		return src;
 	}
 	
-	public static Mat convert2Gray(Mat src){
+	public static Mat rgb2Gray(Mat src){
 		load();
 		Mat dst = new Mat();
 		if(src.channels()==3) {
@@ -195,25 +192,7 @@ public class PDI {
 		Mat dst = src.clone();
 		Imgproc.equalizeHist(src, dst);;
 		return dst;
-	}
-	
-	public static Mat drawCircle2(Mat src, Circle circle) {
-		Random rnd = new Random();			
-		Mat overlay = new Mat(src.size(),src.type());
-		//System.out.println(circle.getXc()+" "+circle.getYc() + " r= " + circle.getRadius());
-		//System.out.println(circle.getR()+" "+circle.getG() + " " + circle.getB());
-		circle.setR();
-		circle.setG();
-		circle.setB();
-		Imgproc.circle(overlay, 
-				new Point(circle.getXc(),circle.getYc()),
-				circle.getRadius(), 
-				new Scalar(circle.getR(), circle.getG(), circle.getB()),
-				-1, -1, 0);
-		Core.addWeighted(overlay, circle.getAlpha(), src, 1-circle.getAlpha(), 0.0, src);
-		
-		return src;
-	}
+	}	
 	
 	public static Mat drawCircles(Mat src, Circle [] circles) {
 		Random rnd = new Random();			
@@ -221,9 +200,6 @@ public class PDI {
 		for (int i = 0; i < circles.length; i++) {
 			Mat overlay = src.clone();
 			Circle circle = circles[i];
-			circle.setR();
-			circle.setG();
-			circle.setB();
 			Imgproc.circle(overlay, 
 					new Point(circle.getYc(),circle.getXc()),
 					circle.getRadius(), 

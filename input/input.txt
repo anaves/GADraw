@@ -7,9 +7,9 @@
 # número de iterações
 # iniciar este arquivo com a palavra parametros
 parametros
-images/gioconda/gioconda.png
+images/arara/arara.png
 2000
-20
+10
 0.05
-20
+10
 10000

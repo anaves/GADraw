@@ -21,14 +21,11 @@ public class PaintPopulation extends Population{
 	 *
 	 * @param indSize
 	 */
-	private void initPopulation(){	
-		
+	private void initPopulation(){			
 		Circle.setFactor();
 		for (int i = 0; i < population.length; i++) {				
 			PaintCod ind = new PaintCod(PaintInstance.getGenesMax());
 			population[i] = ind;
-			//System.out.println(ind);
-			//System.out.println((i) + " " + ind.getFitness());
 			System.gc();
 		}	
 		System.out.println("start Population");
@@ -51,7 +48,7 @@ public class PaintPopulation extends Population{
 		int indexPoor = new Random().nextInt(getPopSize());
 		Problem pior = get(0);
 		for (int i = 1; i < getPopSize(); i++) {
-			if(pior.getFitness() > get(i).getFitness()){ // max <, min >
+			if(pior.getFitness() > get(i).getFitness()){ 
 				pior = get(i);
 				indexPoor = i;
 			}
@@ -63,6 +60,7 @@ public class PaintPopulation extends Population{
 		
 	}
 	
+	
 
 	@Override
 	public Problem bestSolution() {
@@ -71,12 +69,19 @@ public class PaintPopulation extends Population{
 		}		
 		for(int i=0; i< population.length; i++){		
 			if(population[i].getFitness()>melhor.getFitness()){
-			//	System.out.println("trocou " + melhor.getFitness() + " por " + population[i].getFitness());
 				melhor =  population[i];
 			}
 		}	
 		Circle.setFactor();
 		return melhor;
+	}
+
+	public String toString() {
+		String s= "";
+		for (int i = 0; i < population.length; i++) {
+			s=s+population[i].getFitness()+"\n";
+		}
+		return s;
 	}
 
 }

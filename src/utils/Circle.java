@@ -5,6 +5,11 @@ import java.util.Random;
 import problem.Paint.PaintCod;
 import problem.Paint.PaintInstance;
 
+/**
+ * 
+ * @author Alysson A. Naves Silva
+ *
+ */
 public class Circle implements Cloneable{
 	private short xc;
 	private short yc;
@@ -58,38 +63,26 @@ public class Circle implements Cloneable{
 		this.radius = radius;
 	}
 	public short getR() {
+		
 		return r;
 	}
-	public void setR() {
-		Random rnd = new Random();
-	//	if(rnd.nextDouble() < 0.5) {
-	//		this.r = (short)rnd.nextInt(256);
-	//	}else {
-			this.r = (short)(PaintCod.getOriginal().get(getXc(),getYc())[0]*Math.random());
-	//	}
-		
+	public void setR(short r) {
+		this.r=r;
+				
 	}
 	public int getG() {
+		
 		return g;
 	}
-	public void setG() {		
-		Random rnd = new Random();
-	//	if(rnd.nextDouble() < 0.5) {
-	//		this.g = (short)rnd.nextInt(256);
-	//	}else {
-			this.g = (short)(PaintCod.getOriginal().get(getXc(),getYc())[1]*Math.random());
-	//	}
+	public void setG(short g) {		
+		this.g=g;
 	}
 	public short getB() {
+		
 		return b;
 	}
-	public void setB() {	
-		Random rnd = new Random();
-//		if(rnd.nextDouble() < 0.5) {
-//			this.b = (short)rnd.nextInt(256);
-//		}else {
-			this.b = (short)(PaintCod.getOriginal().get(getXc(),getYc())[2]*Math.random());
-//		}
+	public void setB(short b) {	
+		this.b=b;
 	}
 	public double getAlpha() {
 		return alpha;

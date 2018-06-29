@@ -1,8 +1,4 @@
 package problem.Paint;
-
-
-import java.util.Random;
-
 import org.opencv.core.Mat;
 import abstracts.Problem;
 import utils.Circle;
@@ -20,8 +16,7 @@ public class PaintCod extends Problem{
 			original = PaintInstance.getImage();
 			System.out.println("ORIGINAL INSTANCIADO!");
 		}
-		//image = new Mat(original.size(), original.type());
-		
+				
 		listCircle = new Circle[indSize];
 		initImage();		
 	}
@@ -75,21 +70,6 @@ public class PaintCod extends Problem{
 		return image;
 	}
 	
-
-	@Override
-	public boolean stop() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-
-	@Override
-	public Problem getInstance() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Override
 	public double evaluate() {	
 		setFitness(1+(100000000.0/dist1()));
@@ -113,19 +93,19 @@ public class PaintCod extends Problem{
 	
 	public void posProcessing() {
 		Mat m1 = PDI.denoisingFNL(this.image);
-		double rmseM1=dist(m1);
+		double distM1=dist(m1);
 		Mat m2 = PDI.gaussianBlur(this.image);
-		double rmseM2=dist(m2);
+		double distM2=dist(m2);
 		Mat m3 = PDI.medianBlur(this.image);
-		double rmseM3 = dist(m3);
+		double distM3 = dist(m3);
 		Mat m4 = this.image;
-		double rmseM4 = dist(m4);
+		double distM4 = dist(m4);
 		Mat melhor;
-		if(rmseM1<rmseM2 && rmseM1 <rmseM3 && rmseM1 < rmseM4) {
+		if(distM1<distM2 && distM1 <distM3 && distM1 < distM4) {
 			melhor = m1;
-		}else if(rmseM2<rmseM1 && rmseM2 <rmseM3 && rmseM2 < rmseM4) {
+		}else if(distM2<distM1 && distM2 <distM3 && distM2 < distM4) {
 			melhor = m2;
-		}else if(rmseM3<rmseM1 && rmseM3 <rmseM2 && rmseM3 < rmseM4) {
+		}else if(distM3<distM1 && distM3 <distM2 && distM3 < distM4) {
 			melhor = m3;
 		}else {
 			melhor = m4;
@@ -133,6 +113,7 @@ public class PaintCod extends Problem{
 		String local = PaintInstance.getPrefix();
 		PDI.save(local+"Circ"+listCircle.length+"_Radiusmax_"+PaintInstance.getRadiusMax()+"_"+cont+"."+PaintInstance.getFileType(), melhor);
 	}
+	
 	
 	public double dist(Mat m) {
 		double r=0,g=0,b=0;	
@@ -155,6 +136,18 @@ public class PaintCod extends Problem{
 		return "Verifique: " + local +"Out_"+cont+"."+PaintInstance.getFileType() + " fitness " + getFitness() + " " + super.toString();
 	}
 
+	@Override
+	public boolean stop() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public Problem getInstance() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
 	

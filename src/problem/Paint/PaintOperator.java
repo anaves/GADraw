@@ -62,11 +62,11 @@ public class PaintOperator implements Operators {
 				if(randomFactor < 0.6) {
 					// altera cor
 					if(randomFactor < 0.15) // 10%
-						circle.setR();
+						circle.setR((short)(new Random().nextInt(256)));
 					else if(randomFactor < 0.3) // 10%
-						circle.setG(); 
+						circle.setG((short)(new Random().nextInt(256))); 
 					else if (randomFactor < 0.45) // 10%
-						circle.setB();
+						circle.setB((short)(new Random().nextInt(256)));
 					else //10%
 						circle.setAlpha(new Random().nextDouble());
 				}else if(randomFactor < 0.9) {
@@ -108,6 +108,7 @@ public class PaintOperator implements Operators {
 		
 		double value = Math.random()*total;
 		double sum = 0.0;
+		
 		for(int i = 0; i < pop.getPopSize(); i++){
 			sum = sum + pop.get(i).getFitness();
 			if(sum>=value){
